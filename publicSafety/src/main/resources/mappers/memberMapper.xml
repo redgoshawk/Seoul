@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.scit35.saftey.dao.MemberMapper">
+	
+	<!-- 회원가입 -->
+	<insert id="insert" parameterType="CHATUSERS">
+		INSERT INTO CHATUSERS
+		(
+			USERID 
+			,USERPASSWORD 
+			,USERNAME
+			,USEREMAIL
+			,USERGENDER
+		) VALUES(
+			#{userId}
+			,#{userPassword}
+			,#{userName}
+			,#{userEmail}
+			,#{userGender}
+		)
+	</insert >
+	
+	<!-- 로그인, 아이디 중복확인 -->
+	<select id="loginMember" parameterType="CHATUSERS" resultType="CHATUSERS">
+	SELECT USERID 
+		,USERPASSWORD 
+		,USERNAME
+		,USEREMAIL
+		,USERGENDER
+	  FROM CHATUSERS
+	 WHERE USERID   = #{userId}
+		 <if test="userPassword != null">
+	   	   AND USERPASSWORD = #{userPassword}
+	 	 </if>
+	</select>
+
+	<insert id="chatEnter" parameterType="CHATUSERS">
+		INSERT INTO CHATLIST
+		(
+			USERID 
+			,ROOMNAME
+		) VALUES(
+			#{userId}
+			,#{roomName}
+		)
+	</insert >
+	
+	<select id="chatList" parameterType="String" resultType="ChatRoom">
+		select *
+		  from chatlist
+		 where roomname=#{roomName} 
+		 order by userid
+	</select>
+	
+	<!-- 글삭제 -->
+	<delete id="chatOut" parameterType="String">
+		delete from chatlist
+		where userid = #{userId}
+	</delete>
+	
+</mapper>
